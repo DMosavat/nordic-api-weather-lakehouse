@@ -401,3 +401,15 @@ This separation improves:
   - source_file
 - Data stored as Delta table
 - Append-only pattern implemented
+
+## Silver Implementation
+
+- Bronze Delta data is read from ADLS
+- Hourly arrays are flattened using arrays_zip and explode
+- Surrogate keys are generated:
+  - city_id
+  - weather_hourly_id
+- Data quality checks are applied
+- Valid records are written to Silver
+- Invalid records are written to Quarantine
+- Duplicate records are removed using weather_hourly_id
