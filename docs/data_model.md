@@ -413,3 +413,23 @@ This separation improves:
 - Valid records are written to Silver
 - Invalid records are written to Quarantine
 - Duplicate records are removed using weather_hourly_id
+
+## Silver Incremental Processing
+
+Silver uses Delta MERGE / UPSERT instead of full overwrite.
+
+Merge key:
+
+```text
+weather_hourly_id
+```
+
+### Merge behavior:
+
+```text
+
+WHEN MATCHED THEN UPDATE
+WHEN NOT MATCHED THEN INSERT
+```
+
+This allows safe reprocessing, deduplication and incremental loads.

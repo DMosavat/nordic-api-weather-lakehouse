@@ -20,6 +20,7 @@ quarantine_table = "silver_weather_hourly_quarantine"
 # ---------------------------
 
 from pyspark.sql import functions as F
+from delta.tables import DeltaTable
 
 bronze_df = spark.read.format("delta").load(bronze_path)
 
@@ -129,22 +130,48 @@ valid_dedup_df = (
 print("Valid rows after dedup:", valid_dedup_df.count())
 
 # ---------------------------
-# WRITE SILVER AND QUARANTINE
+# WRITE SILVER WITH DELTA MERGE / UPSERT
 # ---------------------------
 
-(
-    valid_dedup_df.write
-    .format("delta")
-    .mode("overwrite")
-    .save(silver_path)
-)
+if DeltaTable.isDeltaTable(spark, silver_path):
+    silver_target = DeltaTable.forPath(spark, silver_path)
 
-(
-    invalid_df.write
-    .format("delta")
-    .mode("overwrite")
-    .save(quarantine_path)
-)
+    (
+        silver_target.alias("target")
+        .merge(
+            valid_dedup_df.alias("source"),
+            "target.weather_hourly_id = source.weather_hourly_id"
+        )
+        .whenMatchedUpdateAll()
+        .whenNotMatchedInsertAll()
+        .execute()
+    )
+
+else:
+    (
+        valid_dedup_df.write
+        .format("delta")
+        .mode("overwrite")
+        .save(silver_path)
+    )
+
+
+# ---------------------------
+# WRITE QUARANTINE
+# ---------------------------
+
+if invalid_df.count() > 0:
+    (
+        invalid_df.write
+        .format("delta")
+        .mode("append")
+        .save(quarantine_path)
+    )
+
+
+# ---------------------------
+# CREATE TABLES IF NOT EXISTS
+# ---------------------------
 
 spark.sql(f"""
 CREATE TABLE IF NOT EXISTS {silver_table}
