@@ -391,3 +391,13 @@ This separation improves:
 - Query performance
 - Access control
 - Semantic consistency
+
+## Bronze Implementation
+
+- Raw JSON data is ingested from ADLS
+- Metadata columns added:
+  - source_system
+  - ingested_at_utc
+  - source_file
+- Data stored as Delta table
+- Append-only pattern implemented
