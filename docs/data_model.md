@@ -433,3 +433,12 @@ WHEN NOT MATCHED THEN INSERT
 ```
 
 This allows safe reprocessing, deduplication and incremental loads.
+
+## Gold Implementation
+
+- KPI table created using daily aggregation
+- Star schema implemented:
+  - dim_city
+  - dim_date
+  - fact_weather_hourly
+- Gold tables optimized for BI and reporting
