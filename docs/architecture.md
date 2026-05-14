@@ -373,3 +373,11 @@ nordic-api-weather-lakehouse/
 ├── README.md
 └── .gitignore
 ```
+
+## Implemented Infrastructure (Phase 1)
+
+- Resource Group: rg-nordic-weather-dev
+- Storage Account: stnordicweatherdevXXX
+- ADLS Gen2 enabled
+- Container: lakehouse
+- Folder structure initialized (raw, bronze, silver, gold, logs)
