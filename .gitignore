@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+*.secret
+*.key
+.env.*
+local.settings.json
+
+# Databricks
+.databricks/
+
+# Power BI
+*.pbix
+*.pbit
+
+# Terraform, if added later
+.terraform/
+*.tfstate
+*.tfstate.*
