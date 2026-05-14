@@ -381,3 +381,14 @@ nordic-api-weather-lakehouse/
 - ADLS Gen2 enabled
 - Container: lakehouse
 - Folder structure initialized (raw, bronze, silver, gold, logs)
+
+## Compute Layer
+
+Azure Databricks is used as the compute engine.
+
+- Workspace: dbw-nordic-weather-dev
+- Cluster: cl-nordic-weather-dev
+- Runtime: Latest LTS
+- Auto termination enabled
+
+Databricks is connected to ADLS Gen2 using storage account key (temporary approach for development).
