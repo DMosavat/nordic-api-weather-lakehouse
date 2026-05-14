@@ -392,3 +392,12 @@ Azure Databricks is used as the compute engine.
 - Auto termination enabled
 
 Databricks is connected to ADLS Gen2 using storage account key (temporary approach for development).
+
+## BI Layer
+
+- Databricks SQL Warehouse is used as serving layer
+- Power BI connects using Databricks connector
+- Views created:
+  - vw_weather_daily_kpi
+  - vw_weather_hourly_star
+- Dashboards built using aggregated KPI and star schema
