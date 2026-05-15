@@ -1,0 +1,53 @@
+name: ci-cd
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install tools
+        run: |
+          pip install pytest ruff
+
+      - name: Lint
+        run: |
+          ruff check .
+
+      - name: Run tests
+        run: |
+          pytest tests
+
+  deploy-dev:
+    if: github.ref == 'refs/heads/develop'
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Infrastructure (Bicep)
+        run: |
+          az deployment group create \
+            --resource-group rg-nordic-weather-dev \
+            --template-file infra/bicep/main.bicep \
+            --parameters env=dev

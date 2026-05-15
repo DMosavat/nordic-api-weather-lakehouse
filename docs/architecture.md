@@ -401,3 +401,9 @@ Databricks is connected to ADLS Gen2 using storage account key (temporary approa
   - vw_weather_daily_kpi
   - vw_weather_hourly_star
 - Dashboards built using aggregated KPI and star schema
+
+## CI/CD
+
+- GitHub Actions used for CI/CD
+- Automated validation and deployment
+- Environment-based deployment strategy (dev/prod)
